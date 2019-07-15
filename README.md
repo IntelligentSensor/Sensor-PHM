@@ -7,34 +7,29 @@
 ## 仪表数据及存储说明
 
 ### 数据分类
-1.原始数据
+- 原始数据
 时间、实时PH、实时温度、电极编号；
-2.过程数据
+- 过程数据
 斜率、零点、放入缓冲液响应时间、放入样品液响应时间；校准、维护计数；
-3.结果数据
-数据形态（正常、一次跳跃、多次跳跃、数值波动、凸奇异点、凹奇异点、单调连续上升或下降、固定值、负值）；数值波动故障、数值跳跃故障、温度电极故障、校准异常故障；环境压力指数、电极剩余寿命、下次校准时间、下次维护时间。
+- 结果数据
+数据形态（正常、一次跳跃、多次跳跃、数值波动、凸奇异点、凹奇异点、单调连续上升或下降、固定值、负值）；数值波动故障、数值跳跃故障、溶液地未连接故障、流通池接地故障；环境压力指数、电极剩余寿命、下次校准时间、下次维护时间。
 ### 数据格式及字段说明
-（1）测量数据文件字段及格式说明：35字节
-    1.电极编号：electNum int 4字节   
-    2.时间：Time   struct 年、月、日、时、分、秒  7字节
-    3.PH值：Ph   float  4字节
-    4.温度：Temp  float  4字节
-    5.故障类型：faultType char  CailFault、tempElect、fluctuate、Jump； 6字节
-    6.数据形态：dataForm char  Normal、Jump1、Jumpn、Surge、singularityCave、singularityVex、monotone、fixed、negative； 6字节
-    7.环境压力指数：ESI  float     4字节
-
-（2）校准数据文件字段及格式说明：47字节
-    1.电极编号：electNum int  4字节 
-    2.时间：Time   struct 年、月、日、时、分、秒  7字节
-    3.斜率：S float  4字节   单位PH/mV
-    4.零点：E0 float  4字节  单位mV
-    5.缓冲液响应时间：Set1  int    4字节
-    6.样品液响应时间：Set2  int    4字节
-    7.校准计数：Calinum    int     4字节
-    8.维护计数：Mainnum   int     4字节
-    9.电极剩余寿命：Rul   float      4字节
-    10.下次校准时间：Calitime  float  4字节
-    11.下次维护时间：Maintime  float  4字节
+   - 电极编号：electNum int 4字节   
+   - 时间：Time   struct 年、月、日、时、分、秒  7字节
+   - PH值：Ph   float  4字节
+   - 温度：Temp  float  4字节
+   - 故障类型：faultType char  CailFault、tempElect、fluctuate、Jump； 6字节
+   - 数据形态：dataForm char  Normal、Jump1、Jumpn、Surge、singularityCave、singularityVex、monotone、fixed、negative； 6字节
+   - 环境压力指数：ESI  float   
+   - 斜率：S float  4字节   单位PH/mV
+   - 零点：E0 float  4字节  单位mV
+   - 缓冲液响应时间：Set1  int    4字节
+   - 样品液响应时间：Set2  int    4字节
+   - 校准计数：Calinum    int     4字节
+   - 维护计数：Mainnum   int     4字节
+   - 电极剩余寿命：Rul   float      4字节
+   - 下次校准时间：Calitime  float  4字节
+   - 下次维护时间：Maintime  float  4字节
 
 ```markdown
 Syntax highlighted code block
