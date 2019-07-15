@@ -2,7 +2,7 @@
 
 致力于智能PH项目的合作交流与协同开发.
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+在HK-328 pH4.0软、硬件基础上，升级软件实现生命周期管理和故障诊断（Prognostic and Health Management），以提高仪表维护管理水平，实现仪表过程数据化和记录文档化。
 
 ### Intelligent Ph GitHub Pages
 
