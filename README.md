@@ -1,6 +1,6 @@
-## Welcome to GitHub Pages
+## Intelligent Ph GitHub Pages
 
-You can use the [editor on GitHub](https://github.com/intelligentph/PhRepository/edit/gh-pages/README.md) to maintain and preview the content for your website in Markdown files.
+致力于智能PH项目的合作交流与协同开发.
 
 Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
 
