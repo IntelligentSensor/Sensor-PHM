@@ -34,17 +34,19 @@
 ## 数据分析模型实现
 
 ### 响应时间提取
-For more details see [缓冲液响应时间](https://github.com/intelligentph/PhRepository/blob/master/resposetime.py).
+For python code see [缓冲液响应时间](https://github.com/intelligentph/PhRepository/blob/master/resposetime.py).
 name of this theme is saved in the `resposetime.py` file.
+For C code see [缓冲液响应时间](https://github.com/intelligentph/PhRepository/blob/master/resposetime.py).
+name of this theme is saved in the `resposetime.c` file.
 
 ### 生命周期管理
-For more details see [剩余寿命预测](https://github.com/intelligentph/PhRepository/blob/master/resposetime.py).
+For python code see [剩余寿命预测](https://github.com/intelligentph/PhRepository/blob/master/resposetime.py).
 
 ### 故障诊断
-For more details see [故障](https://github.com/intelligentph/PhRepository/blob/master/resposetime.py).
+For python code see [故障](https://github.com/intelligentph/PhRepository/blob/master/resposetime.py).
 
 ### 环境压力评估
-For more details see [环境压力](https://github.com/intelligentph/PhRepository/blob/master/resposetime.py).
+For python code see [环境压力](https://github.com/intelligentph/PhRepository/blob/master/resposetime.py).
 
 ```markdown
 Syntax highlighted code block
