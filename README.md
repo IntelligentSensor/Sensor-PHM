@@ -34,16 +34,16 @@
 ## 数据分析模型实现
 
 ### 响应时间提取
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+For more details see [GitHub Flavored Markdown](https://github.com/intelligentph/PhRepository/blob/master/resposetime.py).
 
 ### 生命周期管理
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+For more details see [GitHub Flavored Markdown](https://github.com/intelligentph/PhRepository/blob/master/resposetime.py).
 
 ### 故障诊断
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+For more details see [GitHub Flavored Markdown](https://github.com/intelligentph/PhRepository/blob/master/resposetime.py).
 
 ### 环境压力评估
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+For more details see [GitHub Flavored Markdown](https://github.com/intelligentph/PhRepository/blob/master/resposetime.py).
 
 ```markdown
 Syntax highlighted code block
