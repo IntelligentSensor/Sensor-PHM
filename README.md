@@ -34,16 +34,17 @@
 ## 数据分析模型实现
 
 ### 响应时间提取
-For more details see [GitHub Flavored Markdown](https://github.com/intelligentph/PhRepository/blob/master/resposetime.py).
+For more details see [缓冲液响应时间](https://github.com/intelligentph/PhRepository/blob/master/resposetime.py).
+name of this theme is saved in the `resposetime.py` file.
 
 ### 生命周期管理
-For more details see [GitHub Flavored Markdown](https://github.com/intelligentph/PhRepository/blob/master/resposetime.py).
+For more details see [剩余寿命预测](https://github.com/intelligentph/PhRepository/blob/master/resposetime.py).
 
 ### 故障诊断
-For more details see [GitHub Flavored Markdown](https://github.com/intelligentph/PhRepository/blob/master/resposetime.py).
+For more details see [故障](https://github.com/intelligentph/PhRepository/blob/master/resposetime.py).
 
 ### 环境压力评估
-For more details see [GitHub Flavored Markdown](https://github.com/intelligentph/PhRepository/blob/master/resposetime.py).
+For more details see [环境压力](https://github.com/intelligentph/PhRepository/blob/master/resposetime.py).
 
 ```markdown
 Syntax highlighted code block
@@ -58,13 +59,3 @@ Syntax highlighted code block
 
 [Link](url) and ![Image](src)
 ```
-
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/intelligentph/PhRepository/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://help.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
