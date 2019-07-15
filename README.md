@@ -4,9 +4,9 @@
 
 Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
 
-### Markdown
+### Intelligent Ph GitHub Pages
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+致力于智能PH项目的合作交流与协同开发.
 
 ```markdown
 Syntax highlighted code block
