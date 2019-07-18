@@ -10,7 +10,7 @@
 
    - 原始数据：时间、实时PH、实时温度、电极编号；
    - 过程数据：斜率、零点、放入缓冲液响应时间、放入样品液响应时间；校准、维护计数；
-   - 结果数据：数据形态（正常、一次跳跃、多次跳跃、数值波动、凸奇异点、凹奇异点、单调连续上升或下降、固定值、负值）；故障（数值波动障、数值跳跃、溶液地未连接、流通池接地、采集板、温度电极、校准异常）；环境压力指数、电极剩余寿命、下次校准时间、下次维护时间。
+   - 结果数据：数据形态（数据正常、一次跳跃、多次跳跃、波动、凸奇异点、凹奇异点、单调连续上升或下降、固定值、负值）；故障（数值波动障、数值跳跃、溶液地未连接、流通池接地、采集板、温度电极、校准异常）；环境压力指数、电极剩余寿命、下次校准时间、下次维护时间。
    
 ### 数据格式及字段说明
 
@@ -61,3 +61,5 @@ Syntax highlighted code block
 
 [Link](url) and ![Image](src)
 ```
+
+You can use the [Editor on github](https://github.com/intelligentph/PhRepository/edit/gh-pages/README.md) to maintain and preview the content for your website in markdown files.
