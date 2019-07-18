@@ -48,18 +48,13 @@ which file is saved in the `resposetime.c` file.
 ### 环境压力评估
 1. For python verify code see [环境压力](https://github.com/intelligentph/PhRepository/blob/master/resposetime.py).
 
-```markdown
-Syntax highlighted code block
 
-- Bulleted
-- List
+## 文档 notes
 
-1. Numbered
-2. List
+## 其它 Miscellaneous
 
 **Bold** and _Italic_ and `Code` text
 
 [Link](url) and ![Image](src)
-```
 
 You can use the [Editor on github](https://github.com/intelligentph/PhRepository/edit/gh-pages/README.md) to maintain and preview the content for your website in markdown files.
