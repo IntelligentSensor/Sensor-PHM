@@ -34,10 +34,10 @@
 ## 数据分析模型实现
 
 ### 响应时间提取
-1. For python verify code see [缓冲液响应时间](https://github.com/intelligentph/PhRepository/blob/master/resposetime.py).
-which file is saved in the `resposetime.py` file.
-2. For C Deployment code see [缓冲液响应时间](https://github.com/intelligentph/PhRepository/blob/master/resposetime.py).
-which file is saved in the `resposetime.c` file.
+1. For python verify code see [响应时间](https://github.com/intelligentph/PhRepository/tree/master/ResponseTime/pythonVerifyCode).
+which file is saved in the `reg.py` file.
+2. For C Deployment code see [响应时间](https://github.com/intelligentph/PhRepository/tree/master/ResponseTime/cDeploymentCode).
+which file is saved in the `BitmapDialog.cpp` file.
 
 ### 生命周期管理
 1. For python verify code see [剩余寿命预测](https://github.com/intelligentph/PhRepository/blob/master/resposetime.py).
