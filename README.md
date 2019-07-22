@@ -34,20 +34,28 @@
 ## 数据分析模型实现
 
 ### 响应时间提取
-1. For python verify code see [响应时间](https://github.com/intelligentph/PhRepository/tree/master/ResponseTime/pythonVerifyCode).
+1. For python verify code see [python响应时间](https://github.com/intelligentph/PhRepository/tree/master/ResponseTime/pythonVerifyCode).
 which file is saved in the `reg.py` file.
-2. For C Deployment code see [响应时间](https://github.com/intelligentph/PhRepository/tree/master/ResponseTime/cDeploymentCode).
+2. For C Deployment code see [c响应时间](https://github.com/intelligentph/PhRepository/tree/master/ResponseTime/cDeploymentCode).
 which file is saved in the `BitmapDialog.cpp` file.
 
 ### 生命周期管理
-1. For python verify code see [剩余寿命预测](https://github.com/intelligentph/PhRepository/blob/master/resposetime.py).
+1. For python verify code see [python生命周期](https://github.com/intelligentph/PhRepository/tree/master/HealthManagement/pythonVerifyCode).
+which file is saved in the `reg.py` file.
+2. For C Deployment code see [c生命周期](https://github.com/intelligentph/PhRepository/tree/master/HealthManagement/cDeploymentCode).
+which file is saved in the `BitmapDialog.cpp` file.
 
 ### 故障诊断与数据形态识别
-1. For python verify code see [故障](https://github.com/intelligentph/PhRepository/blob/master/resposetime.py).
+1. For python verify code see [python故障](https://github.com/intelligentph/PhRepository/tree/master/Prognostic/pythonVerifyCode).
+which file is saved in the `reg.py` file.
+2. For C Deployment code see [c故障](https://github.com/intelligentph/PhRepository/tree/master/Prognostic/cDeploymentCode).
+which file is saved in the `BitmapDialog.cpp` file.
 
 ### 环境压力评估
-1. For python verify code see [环境压力](https://github.com/intelligentph/PhRepository/blob/master/resposetime.py).
-
+1. For python verify code see [python环境评估](https://github.com/intelligentph/PhRepository/tree/master/EnvironmentalStressIndex/pythonVerifyCode).
+which file is saved in the `reg.py` file.
+2. For C Deployment code see [c环境评估](https://github.com/intelligentph/PhRepository/tree/master/EnvironmentalStressIndex/cDeploymentCode).
+which file is saved in the `BitmapDialog.cpp` file.
 
 ## 文档 notes
 
