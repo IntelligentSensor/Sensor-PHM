@@ -61,6 +61,6 @@ which file is saved in the `BitmapDialog.cpp` file.
 
 ## 其它 Miscellaneous
 
-![Image](https://img-blog.csdnimg.cn/20190726090531911.JPG) 
+![Image](src) 
 
 You can use the [Editor on github](https://github.com/intelligentph/PhRepository/edit/gh-pages/README.md) to maintain and preview the content for your website in markdown files.
