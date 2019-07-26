@@ -38,7 +38,7 @@
 which file is saved in the `reg.py` file.
 2. For C Deployment code see [c响应时间](https://github.com/intelligentph/PhRepository/tree/master/ResponseTime/cDeploymentCode).
 which file is saved in the `BitmapDialog.cpp` file.
-3.For html test report see [TestReport](https://github.com/intelligentph/PhRepository/tree/master/ResponseTime/TestReport).
+3. For html test report see [TestReport](https://github.com/intelligentph/PhRepository/tree/master/ResponseTime/TestReport).
 which file is saved in the `TestReport.html` file.
 
 ### 生命周期管理
@@ -46,7 +46,7 @@ which file is saved in the `TestReport.html` file.
 which file is saved in the `reg.py` file.
 2. For C Deployment code see [c生命周期](https://github.com/intelligentph/PhRepository/tree/master/HealthManagement/cDeploymentCode).
 which file is saved in the `BitmapDialog.cpp` file.
-3.For html test report see [TestReport](https://github.com/intelligentph/PhRepository/tree/master/HealthManagement/TestReport).
+3. For html test report see [TestReport](https://github.com/intelligentph/PhRepository/tree/master/HealthManagement/TestReport).
 which file is saved in the `TestReport.html` file.
 
 ### 故障诊断与数据形态识别
@@ -54,7 +54,7 @@ which file is saved in the `TestReport.html` file.
 which file is saved in the `reg.py` file.
 2. For C Deployment code see [c故障](https://github.com/intelligentph/PhRepository/tree/master/Prognostic/cDeploymentCode).
 which file is saved in the `BitmapDialog.cpp` file.
-3.For html test report see [TestReport](https://github.com/intelligentph/PhRepository/tree/master/Prognostic/TestReport).
+3. For html test report see [TestReport](https://github.com/intelligentph/PhRepository/tree/master/Prognostic/TestReport).
 which file is saved in the `TestReport.html` file.
 
 ### 环境压力评估
@@ -62,7 +62,7 @@ which file is saved in the `TestReport.html` file.
 which file is saved in the `reg.py` file.
 2. For C Deployment code see [c环境评估](https://github.com/intelligentph/PhRepository/tree/master/EnvironmentalStressIndex/cDeploymentCode).
 which file is saved in the `BitmapDialog.cpp` file.
-3.For html test report see [TestReport](https://github.com/intelligentph/PhRepository/tree/master/EnvironmentalStressIndex/TestReport).
+3. For html test report see [TestReport](https://github.com/intelligentph/PhRepository/tree/master/EnvironmentalStressIndex/TestReport).
 which file is saved in the `TestReport.html` file.
 
 
