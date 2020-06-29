@@ -1,4 +1,4 @@
-# Intelligent Ph Project Exchange && Version Control
+# Intelligent Sensor Project Exchange && Version Control
 ## 四个算法模块分别用python验证、C语言部署。
 1. 响应时间提取
     - 缓冲液响应时间
