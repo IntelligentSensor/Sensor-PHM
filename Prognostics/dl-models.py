@@ -43,10 +43,10 @@ batch_size = 10
 epochs = 100
 num_classes = 9
 length = 2048
-BatchNorm = True     # 是否批量归一化
-number = 200           # 每类样本的数量
+BatchNorm = True        # 是否批量归一化
+number = 200            # 每类样本的数量
 normal = True           # 是否标准化
-rate = [0.7,0.2,0.1]     # 测试集验证集划分比例
+rate = [0.7,0.2,0.1]    # 测试集验证集划分比例
 
 path = r'data/0HP'
 x_train, y_train, x_valid, y_valid, x_test, y_test = preprocess.prepro(d_path=path,length=length,
@@ -203,7 +203,7 @@ print(Class_dict[np.argmax(predicted)])
 print("This took ", datetime.now() - start)
 
 'LSTM'
-x_train = x_train.reshape((x_train.shape[0], 16, 128))   #（time_step、input_dim）
+x_train = x_train.reshape((x_train.shape[0], 16, 128))        #time_step、input_dim
 x_valid = x_valid.reshape((x_valid.shape[0], 16, 128))
 x_test = x_test.reshape((x_test.shape[0], 16, 128))
 

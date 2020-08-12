@@ -9,25 +9,14 @@ def prepro(d_path, length=864, number=1000, normal=True, rate=[0.5, 0.25, 0.25],
     """对数据进行预处理,返回train_X, train_Y, valid_X, valid_Y, test_X, test_Y样本.
 
     :param d_path: 源数据地址
-    :param length: 信号长度，默认2个信号周期，864
-    :param number: 每种信号个数,总共10类,默认每个类别1000个数据
+    :param length: 信号长度，默认5个信号周期T=400*10S=66.6min～1h，2048
+    :param number: 每种信号个数,总共9类,默认每个类别1000个数据
     :param normal: 是否标准化.True,Fales.默认True
     :param rate: 训练集/验证集/测试集比例.默认[0.5,0.25,0.25],相加要等于1
     :param enc: 训练集、验证集是否采用数据增强.Bool,默认True
     :param enc_step: 增强数据集采样顺延间隔
     :return: Train_X, Train_Y, Valid_X, Valid_Y, Test_X, Test_Y
 
-    ```
-    import preprocess.preprocess_nonoise as pre
-
-    train_X, train_Y, valid_X, valid_Y, test_X, test_Y = pre.prepro(d_path=path,
-                                                                    length=864,
-                                                                    number=1000,
-                                                                    normal=False,
-                                                                    rate=[0.5, 0.25, 0.25],
-                                                                    enc=True,
-                                                                    enc_step=28)
-    ```
     """
     # 获得该文件夹下所有.mat文件名
     filenames = os.listdir(d_path)
