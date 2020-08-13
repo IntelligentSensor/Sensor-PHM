@@ -9,8 +9,6 @@ from preprocess import preprocess
 import sys
 import keras as K
 import tensorflow as tf
-# import tensorflow.keras as K
-# from keras import backend as K #2.2.4
 from datetime import datetime
 from keras.regularizers import l2
 from keras.utils import plot_model
@@ -18,12 +16,11 @@ from keras.models import Sequential
 from keras.models import load_model
 from keras.callbacks import TensorBoard
 from keras.models import model_from_json
-
-from keras.layers import Conv1D, Dense, Dropout, BatchNormalization, MaxPooling1D, Activation, Flatten
+from keras.layers import Input, Dense, Flatten, Activation
+from keras.layers import Conv1D, Dropout, BatchNormalization, MaxPooling1D
 
 from keras.layers import LSTM, Bidirectional
 from keras.layers.core import Flatten, Dense, Dropout
-from keras.layers import Input, Dense, Flatten
 
 py_ver = sys.version
 k_ver = K.__version__
@@ -40,7 +37,7 @@ Class_dict={0:'正常', 1:'溶液地未连接', 2:'流通池接地', 3:'电缆�
 
 # 训练参数
 batch_size = 10
-epochs = 10
+epochs = 30
 num_classes = 9
 length = 2048
 BatchNorm = True        # 是否批量归一化
