@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-print(__doc__)
 
 import numpy as np
 import pandas as pd
@@ -16,6 +15,7 @@ from sklearn.feature_selection import SelectKBest
 from sklearn.feature_selection import chi2
 
 from preprocess import preprocess
+import matplotlib.pyplot as plt
 
 class featureEngineer(object):
     def __init__(self):
@@ -30,8 +30,21 @@ class featureEngineer(object):
         self.form_7 = np.loadtxt(self.root + "data/form/form_7.txt")        #电解液缺失
         self.form_8 = np.loadtxt(self.root + "data/form/form_8.txt")        #水样波动
         self.normal = np.loadtxt(self.root + "data/form/normal.txt")        #正常
-
-    'overSampling'
+    
+    'one-hot decode'
+    def decode(self, arr):
+        def get_label(row):
+            for c in range(len(row)):
+                if row[c]==1:
+                    return c
+    
+        temp = np.zeros(len(arr))
+        for i in range(len(arr)):
+            temp[i] = get_label(arr[i])
+        return temp
+    
+    '处理样本不均衡'
+    ######################overSampling####################
     def overSampling(self, data, label):
         #RandomOverSampler 随机过采样
         def Ros(data,label):   #通过简单的随机采样少数类的样本, 使得每类样本的比例为1:1:1:1
@@ -57,17 +70,19 @@ class featureEngineer(object):
             data_smote_bd, label_smote_bd =smote.fit_sample(data, label)
             return data_smote_bd, label_smote_bd
 
-    'one-hot decode'
-    def decode(self, arr):
-        def get_label(row):
-            for c in range(len(row)):
-                if row[c]==1:
-                    return c
+    #######################calssWeight####################
+    def calssWeight(self, y_train):
+        weights = class_weight.compute_class_weight('balanced', np.unique(y_train), y_train)
+        return weights
 
-        temp = np.zeros(len(arr))
-        for i in range(len(arr)):
-            temp[i] = get_label(arr[i])
-        return temp
+    '样本分布'
+    def sampleDistribution(self, sample):     #非参数检验
+        print('describe', sample.describe())  #基本统计
+        df = pd.DataFrame(sample)             #离群点
+        df.boxplot()
+        plt.show()
+        print('正态显著性检验', sts.shapiro(sample))                   #Shapiro-Wilk
+        print('logistic检验', sts.anderson(sample,dist="logistic"))  #Anderson-Darling
 
     'Feature Extraction'
     #########################统计指标#######################
@@ -322,6 +337,49 @@ class featureEngineer(object):
         Frechet_8 = Frechet(data, self.form_8)
         
         return np.hstack((Frechet_1, Frechet_2, Frechet_3, Frechet_4, Frechet_5, Frechet_6, Frechet_7, Frechet_8))
+    
+    '特征分布'
+    def featureDistribution(self, feature):
+        
+        df=pd.DataFrame(feature, columns = ['最大', '最小', '均值', '方差', '标准差', 'absmean', '均方根', 'vi',
+        'skew','kurt', 'ptp', 'par', 'form', 'impulse', 'margin', '谱峰态', '谱偏态','谱能量', '波范数',
+        'frechet1','frechet2', 'frechet3', 'frechet4', 'frechet5', 'frechet6', 'frechet7', 'frechet8' ])
+
+        nan_rows = df[df.isnull().T.any().T]    #缺失值
+        print('特征缺失值数量为', len(nan_rows))
+        
+        plt.figure(figsize=(16,5))              #离群点
+        df.boxplot()
+        plt.show()
+
+    '特征变换缩放'
+    def featureScaling(self, feature):
+
+#        smooth = np.log1p(feature)                     #logit变换
+        min_max_scaler = preprocessing.MinMaxScaler()  #最大最小值归一化
+        feature_scaled = min_max_scaler.fit_transform(feature)
+#        feature_caled = preprocessing.scale(feature)  #Z-Score标准化
+        return feature_scaled
+
+    '特征选择'
+    ####################卡方检验######################
+    def featureSelect(self, feature, label):
+        model1 = SelectKBest(chi2, k=2)                       #卡方检验选择k个最佳特征
+        selectfeature = model1.fit_transform(feature, label)  #特征数据与标签数据，可以选择出k个特征
+        
+        scores = pd.DataFrame(model1.scores_.reshape(1, 27), columns = ['maximum', 'minimum', 'mean', 'var',
+                    'std', 'absmean', 'rms', 'vi', 'skew', 'kurt', 'ptp', 'par', 'form', 'impulse', 'margin',
+                'spectral_kurt', 'spectral_skw','spectral_pow', 'wave_L2', 'frechet_form1', 'frechet_form2',
+        'frechet_form3', 'frechet_form4', 'frechet_form5', 'frechet_form6', 'frechet_form7', 'frechet_form8' ])
+        scores.index = ['chi-square']
+        scores.T.sort_values(by = 'chi-square', ascending= False)
+        
+        pvalues = pd.DataFrame(model1.pvalues_.reshape(1,27), columns =['maximum', 'minimum', 'mean', 'var',
+                    'std', 'absmean', 'rms', 'vi', 'skew', 'kurt', 'ptp', 'par', 'form', 'impulse', 'margin',
+                'spectral_kurt', 'spectral_skw','spectral_pow', 'wave_L2', 'frechet_form1', 'frechet_form2',
+        'frechet_form3', 'frechet_form4', 'frechet_form5', 'frechet_form6', 'frechet_form7', 'frechet_form8' ])
+        pvalues.index = ['p-value']
+        pvalues.T.sort_values(by = 'p-value', ascending= True)
 
     #########################特征方差########################
     def var_filter(self, data, label, k=0):
@@ -332,21 +390,21 @@ class featureEngineer(object):
         :param k: 方差阈值
         :return:  按阈值返回dataframe
         """
-        features = data.drop([label], axis=1).columns
-        saved_features = []
-        for feature in features:
+            features = data.drop([label], axis=1).columns
+            saved_features = []
+            for feature in features:
             feature_var = np.array(data[feature]).var()
             print('输入特征{0}的方差为：{1}'.format(feature, feature_var))
 
-    #########################共线性检验########################
-    def vif_test(self, data, label, k=None):
+        #########################共线性检验########################
+        def vif_test(self, data, label, k=None):
         """
-        计算dataframe中输入特征之间的共线性系数
-        :param data: dataframe数据集，包括输入输出
-        :param label: 输出特征
-        :param k: 相关系数阈值
-        :return:  按阈值返回dataframe
-        """
+            计算dataframe中输入特征之间的共线性系数
+            :param data: dataframe数据集，包括输入输出
+            :param label: 输出特征
+            :param k: 相关系数阈值
+            :return:  按阈值返回dataframe
+            """
         features = data.drop([label], axis=1).columns
         feature_array = np.array(data[features])
         #     print(feature_array)
@@ -388,7 +446,7 @@ class featureEngineer(object):
             cut.append(float('inf'))
             woe = list(d4['woe'].round(3))
             return d4,iv,cut,woe
-
+    
     #等频分箱
     def bin_frequency(self, x, y, n=10): # x为待分箱的变量，y为target变量.n为分箱数量
         total = y.count()  # 计算总样本数
@@ -444,24 +502,19 @@ if __name__ == "__main__":
     test = pd.DataFrame(x_train)
     nan_rows = test[test.isnull().T.any().T]
     print('样本缺失值数量为', len(nan_rows))
-
-    '查看数据分布'
-    sample = test.T[0]
-    print('describe', sample.describe())
-
-    print('正态显著性检验', sts.shapiro(sample))  #Shapiro-Wilk
-    print('logistic检验', sts.anderson(sample,dist="logistic"))  #Anderson-Darling
-
+    
     FE = featureEngineer()
+    'onehot解码'
     y_train_decode = FE.decode(y_train)
     y_valid_decode = FE.decode(y_valid)
     y_test_decode = FE.decode(y_test)
 
-    'class_weight'
-    weights = class_weight.compute_class_weight('balanced',
-                                                np.unique(y_train_decode),
-                                                y_train_decode)
+    'compute class weight'
+    weights = FE.calssWeight(y_train_decode)
     print('class_weight', weights)
+    
+    '查看数据分布'
+    FE.sampleDistribution(test.T[0])
 
     '生成特征'
     feature_train = np.hstack((FE.generateStats(x_train), FE.generateWave_L2(x_train), FE.generateFrechet(x_train)))
@@ -469,43 +522,16 @@ if __name__ == "__main__":
     feature_test = np.hstack((FE.generateStats(x_test), FE.generateWave_L2(x_test), FE.generateFrechet(x_test)))
     print('feature shape', feature_train.shape)
 
-    '特征分析'
-    df=pd.DataFrame(feature_train, columns = ['最大', '最小', '均值', '方差', '标准差', 'absmean', '均方根', 'vi',
-    'skew','kurt', 'ptp', 'par', 'form', 'impulse', 'margin', '谱峰态', '谱偏态','谱能量', '波范数', 'frechet1',
-                        'frechet2', 'frechet3', 'frechet4', 'frechet5', 'frechet6', 'frechet7', 'frechet8' ])
-    'outlier'
-    smooth = np.log1p(df)                   #logit变换
-    nan_rows = df[df.isnull().T.any().T]    #缺失值
-    print('特征缺失值数量为', len(nan_rows))
+    '查看特征分布'
+    FE.featureDistribution(feature_train)
+    
+    'Feature Scalings缩放'
+    feature_train_scaled = FE.featureScaling(feature_train)
+    feature_valid_scaled = FE.featureScaling(feature_valid)
+    feature_test_scaled = FE.featureScaling(feature_test)
 
-    'Feature Scaling'
-    min_max_scaler = preprocessing.MinMaxScaler()  #最大最小值归一化
-
-    feature_train_scaled = min_max_scaler.fit_transform(feature_train)
-    feature_valid_scaled = min_max_scaler.fit_transform(feature_valid)
-    feature_test_scaled = min_max_scaler.fit_transform(feature_test)
-
-    # feature_train_scaled = preprocessing.scale(feature_train)  #Z-Score标准化
-    # feature_valid_scaled = preprocessing.scale(feature_valid)
-    # feature_test_scaled = preprocessing.scale(feature_test)
-
-    'Feature Select'
-    model1 = SelectKBest(chi2, k=2)     #卡方检验选择k个最佳特征
-    selectfeature = model1.fit_transform(feature_train_scaled, y_train)#特征数据与标签数据，可以选择出k个特征
-
-    scores = pd.DataFrame(model1.scores_.reshape(1, 27), columns = ['maximum', 'minimum', 'mean', 'var',
-            'std', 'absmean', 'rms', 'vi', 'skew', 'kurt', 'ptp', 'par', 'form', 'impulse', 'margin',
-            'spectral_kurt', 'spectral_skw','spectral_pow', 'wave_L2', 'frechet_form1', 'frechet_form2',
-    'frechet_form3', 'frechet_form4', 'frechet_form5', 'frechet_form6', 'frechet_form7', 'frechet_form8' ])
-    scores.index = ['chi-square']
-    scores.T.sort_values(by = 'chi-square', ascending= False)
-
-    pvalues = pd.DataFrame(model1.pvalues_.reshape(1,27), columns =['maximum', 'minimum', 'mean', 'var',
-            'std', 'absmean', 'rms', 'vi', 'skew', 'kurt', 'ptp', 'par', 'form', 'impulse', 'margin',
-            'spectral_kurt', 'spectral_skw','spectral_pow', 'wave_L2', 'frechet_form1', 'frechet_form2',
-    'frechet_form3', 'frechet_form4', 'frechet_form5', 'frechet_form6', 'frechet_form7', 'frechet_form8' ])
-    pvalues.index = ['p-value']
-    pvalues.T.sort_values(by = 'p-value', ascending= True)
+    'Feature Select选择'
+    FE.featureSelect(feature_train_scaled, y_train)
 
     '取前两类做共线性与IV检验数据集'
     class_index = np.argwhere(y_train_decode < 2)
@@ -514,7 +540,7 @@ if __name__ == "__main__":
 
     y_train_IV = y_train_decode[head:tail].reshape(tail, 1)
     x_train_IV = feature_train[head:tail]
-    x_train_IV = min_max_scaler.fit_transform(x_train_IV)   #独立归一化
+    x_train_IV = FE.featureScaling(x_train_IV)   #独立归一化
 
     print('y_train_IV shape {}' .format(y_train_IV.shape))
     print('x_train_IV shape {}' .format(x_train_IV.shape))
@@ -525,12 +551,10 @@ if __name__ == "__main__":
                 'skew', 'kurt', 'ptp', 'par', 'form', 'impulse', 'margin', 'spectral_kurt', 'spectral_skw',
                 'spectral_pow', 'wave_L2', 'frechet_form1', 'frechet_form2', 'frechet_form3', 'frechet_form4',
                 'frechet_form5', 'frechet_form6', 'frechet_form7', 'frechet_form8', 'y'])
-    data.head()
 
     FE.var_filter(data, 'y', k=0)   #特征方差
     FE.vif_test(data, 'y', k=0.9)   #特征共线性检验
 
     d4,iv,cut,woe = FE.bin_distince(data['frechet_form8'], data['y'], n =2)    #等距 IV
     d4,iv,cut,woe = FE.bin_frequency(data['frechet_form8'], data['y'], n =3)   #等频 IV
-
 
