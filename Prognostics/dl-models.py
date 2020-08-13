@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 
 import random
-import preprocess
 import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
+from preprocess import preprocess
 
 import sys
 import keras as K
@@ -40,7 +40,7 @@ Class_dict={0:'正常', 1:'溶液地未连接', 2:'流通池接地', 3:'电缆�
 
 # 训练参数
 batch_size = 10
-epochs = 100
+epochs = 10
 num_classes = 9
 length = 2048
 BatchNorm = True        # 是否批量归一化
@@ -48,8 +48,10 @@ number = 200            # 每类样本的数量
 normal = True           # 是否标准化
 rate = [0.7,0.2,0.1]    # 测试集验证集划分比例
 
-path = r'data/0HP'
-x_train, y_train, x_valid, y_valid, x_test, y_test = preprocess.prepro(d_path=path,length=length,
+path = '/Users/tung/Python/WorkProject/PHMresearch/WDCNN&LR_FaultDiagnosis/'
+preprocess = preprocess()
+
+x_train, y_train, x_valid, y_valid, x_test, y_test = preprocess.prepro(d_path=path+'data/0HP',length=length,
                                                                        number=number,
                                                                        normal=normal,
                                                                        rate=rate,
@@ -102,11 +104,11 @@ def wdcnn(filters, kernerl_size, strides, conv_padding, pool_padding,  pool_size
         """
     model.add(Conv1D(filters=filters, kernel_size=kernerl_size, strides=strides,
                      padding=conv_padding, kernel_regularizer=l2(1e-4)))
-                     if BatchNormal:
-                         model.add(BatchNormalization())
-                     model.add(Activation('relu'))
-                     model.add(MaxPooling1D(pool_size=pool_size, padding=pool_padding))
-return model
+    if BatchNormal:
+        model.add(BatchNormalization())
+    model.add(Activation('relu'))
+    model.add(MaxPooling1D(pool_size=pool_size, padding=pool_padding))
+    return model
 
 # 实例化序贯模型
 model = Sequential()
@@ -173,12 +175,12 @@ temp = test + testwgn
 #第一层卷积核大小与抗噪
 #feature map特征可分性
 #保存模型
-model_path = 'models/wdcnn.h5'
+model_path = path + 'models/wdcnn.h5'
 model.save(model_path)
 del model
 
 # 模型包含一个自定义 wdcnn 类的实例
-model = load_model('models/wdcnn.h5', custom_objects={'wdcnn': wdcnn})
+model = load_model(path+'models/wdcnn.h5', custom_objects={'wdcnn': wdcnn})
 model.summary()
 #fine-tune
 
@@ -186,7 +188,7 @@ model.summary()
 score = model.evaluate(x=x_test, y=y_test, verbose=0)
 print("测试集上的损失：", score[0])
 print("测试集上的损失:",score[1])
-plot_model(model=model, to_file='wdcnn.png', show_shapes=True)
+plot_model(model=model, to_file=path+'models/wdcnn.png', show_shapes=True)
 
 #prediction
 start = datetime.now()
@@ -235,18 +237,18 @@ history =model.fit(x_train, y_train, epochs=epochs, batch_size=batch_size, valid
 print("This took ", datetime.now() - start)
 
 #保存模型
-model_path = 'models/LSTM.h5'
+model_path = path+'models/LSTM.h5'
 model.save(model_path)
 del model
 
-model = load_model('models/LSTM.h5')
+model = load_model(path+'models/LSTM.h5')
 model.summary()
 
 #evaluation
 score = history.model.evaluate(x=x_test, y=y_test, verbose=0)
 print("测试集上的损失：", score[0])
 print("测试集上的损失:",score[1])
-plot_model(model=model, to_file='LSTM.png', show_shapes=True)
+plot_model(model=model, to_file=path+'models/LSTM.png', show_shapes=True)
 
 #prediction
 start = datetime.now()
@@ -284,8 +286,8 @@ history =model.fit(x_train, y_train, epochs=epochs, batch_size=batch_size, valid
 print("This took ", datetime.now() - start)
 
 #嵌套网络保存
-model.save_weights('biLSTM.h5')
-model.load_weights('biLSTM.h5',by_name=True)
+model.save_weights(path+'models/biLSTM.h5')
+model.load_weights(path+'models/biLSTM.h5',by_name=True)
 json_string = model.to_json()
 model=model_from_json(json_string)
 model.build((None, x_train.shape[1], x_train.shape[2]))      #time_step、input_dim
@@ -295,7 +297,7 @@ model.summary()
 score = history.model.evaluate(x=x_test, y=y_test, verbose=0)
 print("测试集上的损失：", score[0])
 print("测试集上的损失:",score[1])
-plot_model(model=model, to_file='biLSTM.png', show_shapes=True)
+plot_model(model=model, to_file=path+'models/biLSTM.png', show_shapes=True)
 
 #prediction
 start = datetime.now()

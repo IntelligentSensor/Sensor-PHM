@@ -1,7 +1,12 @@
 #!/usr/bin/env python
-from datetime import datetime
+import numpy as np
+import pandas as pd
+import _pickle as cPickle
 import scipy.optimize as opt
+from datetime import datetime
 from scipy.stats import uniform, randint
+from sklearn.preprocessing import OneHotEncoder
+
 
 from sklearn.model_selection import cross_val_score, GridSearchCV
 from sklearn.model_selection import KFold, RandomizedSearchCV, train_test_split
@@ -15,10 +20,31 @@ from sklearn.metrics import precision_score, recall_score, f1_score
 import logging
 from sklearn import svm
 from sklearn.linear_model import LogisticRegression
+from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.ensemble import AdaBoostClassifier
-from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import GradientBoostingClassifier
+
+path = '/Users/tung/Python/WorkProject/PHMresearch/WDCNN&LR_FaultDiagnosis/'
+
+feature_train_scaled = cPickle.load( open(path+'feature_train_scaled.pkl','rb') )
+feature_valid_scaled = cPickle.load( open(path+'feature_valid_scaled.pkl','rb') )
+feature_test_scaled = cPickle.load( open(path+'feature_test_scaled.pkl','rb') )
+
+y_train_decode = cPickle.load( open(path+'y_train_decode.pkl','rb') )
+y_valid_decode = cPickle.load( open(path+'y_valid_decode.pkl','rb') )
+y_test_decode = cPickle.load( open(path+'y_test_decode.pkl','rb') )
+
+def encode(data):
+    data = np.array(data).reshape([-1, 1])
+    print('Shape of data (BEFORE encode): %s' % str(data.shape))
+    Encoder = OneHotEncoder()
+    Encoder.fit(data)
+    encoded = Encoder.transform(data).toarray()
+    print('Shape of data (AFTER  encode): %s\n' % str(encoded.shape))
+    return encoded
+
+y_test = encode(y_test_decode)
 
 def display_scores(scores):
     print("Scores: {0}\nMean: {1:.3f}\nStd: {2:.3f}".format(scores, np.mean(scores), np.std(scores)))
@@ -138,109 +164,111 @@ micro_auc = auc(fpr, tpr)
 print ('micro_auc：', micro_auc)
 
 'demo lr'
-def sigmoid(z):
-    return 1 / (1 + np.exp(-z))
+def demoLr(data):
+    def sigmoid(z):
+        return 1 / (1 + np.exp(-z))
 
-# add a ones column - this makes the matrix multiplication work out easier
-data.insert(0, 'Ones', 1)
+    # add a ones column - this makes the matrix multiplication work out easier
+    data.insert(0, 'Ones', 1)
 
-# set X (training data) and y (target variable)
-cols = data.shape[1]
-X = data.iloc[:,0:cols-1]
-y = data.iloc[:,cols-1:cols]
+    # set X (training data) and y (target variable)
+    cols = data.shape[1]
+    X = data.iloc[:,0:cols-1]
+    y = data.iloc[:,cols-1:cols]
 
-# convert to numpy arrays and initalize the parameter array theta
-X = X.values
-y = y.values.reshape(len(y),)
+    # convert to numpy arrays and initalize the parameter array theta
+    X = X.values
+    y = y.values.reshape(len(y),)
 
-theta = np.zeros(X.shape[1])
+    theta = np.zeros(X.shape[1])
 
-#regularized cost
-def cost(theta, X, y):
-    ''' cost fn is -l(theta) for you to minimize'''
-    return np.mean(-y * np.log(sigmoid(X @ theta)) - (1 - y) * np.log(1 - sigmoid(X @ theta)))
+    #regularized cost
+    def cost(theta, X, y):
+        ''' cost fn is -l(theta) for you to minimize'''
+        return np.mean(-y * np.log(sigmoid(X @ theta)) - (1 - y) * np.log(1 - sigmoid(X @ theta)))
 
-cost(theta, X, y)
+    cost(theta, X, y)
 
-def regularized_cost(theta, X, y, l=1):
-    #     '''you don't penalize theta_0'''
-    theta_j1_to_n = theta[1:]
-    regularized_term = (l / (2 * len(X))) * np.power(theta_j1_to_n, 2).sum()
-    
-    return cost(theta, X, y) + regularized_term
+    def regularized_cost(theta, X, y, l=1):
+        #     '''you don't penalize theta_0'''
+        theta_j1_to_n = theta[1:]
+        regularized_term = (l / (2 * len(X))) * np.power(theta_j1_to_n, 2).sum()
+        
+        return cost(theta, X, y) + regularized_term
 
-'this is the same as the not regularized cost because we init theta as zeros...'
-regularized_cost(theta, X, y, l=1)
+    'this is the same as the not regularized cost because we init theta as zeros...'
+    regularized_cost(theta, X, y, l=1)
 
-#regularized gradient
-def gradient(theta, X, y):
-    #     '''just 1 batch gradient'''
-    return (1 / len(X)) * X.T @ (sigmoid(X @ theta) - y)
-gradient(theta, X, y)
+    #regularized gradient
+    def gradient(theta, X, y):
+        #     '''just 1 batch gradient'''
+        return (1 / len(X)) * X.T @ (sigmoid(X @ theta) - y)
+    gradient(theta, X, y)
 
-def regularized_gradient(theta, X, y, l=1):
-    #     '''still, leave theta_0 alone'''
-    theta_j1_to_n = theta[1:]
-    regularized_theta = (l / len(X)) * theta_j1_to_n
-    
-    # by doing this, no offset is on theta_0
-    regularized_term = np.concatenate([np.array([0]), regularized_theta])
-    
-    return gradient(theta, X, y) + regularized_term
+    def regularized_gradient(theta, X, y, l=1):
+        #     '''still, leave theta_0 alone'''
+        theta_j1_to_n = theta[1:]
+        regularized_theta = (l / len(X)) * theta_j1_to_n
+        
+        # by doing this, no offset is on theta_0
+        regularized_term = np.concatenate([np.array([0]), regularized_theta])
+        
+        return gradient(theta, X, y) + regularized_term
 
-regularized_gradient(theta, X, y)
+    regularized_gradient(theta, X, y)
 
-print('init cost = {}'.format(regularized_cost(theta, X, y)))
+    print('init cost = {}'.format(regularized_cost(theta, X, y)))
 
-res = opt.minimize(fun=regularized_cost, x0=theta, args=(X, y), method='Newton-CG', jac=regularized_gradient)
-res
+    res = opt.minimize(fun=regularized_cost, x0=theta, args=(X, y), method='Newton-CG', jac=regularized_gradient)
+    res
 
-#prediction
-def predict(x, theta):
-    prob = sigmoid(x @ theta)
-    return (prob >= 0.5).astype(int)
+    #prediction
+    def predict(x, theta):
+        prob = sigmoid(x @ theta)
+        return (prob >= 0.5).astype(int)
 
-final_theta = res.x
-y_pred = predict(X, final_theta)
+    final_theta = res.x
+    y_pred = predict(X, final_theta)
 
-print(classification_report(y, y_pred))
+    print(classification_report(y, y_pred))
 
 'SVM'
-positive = data[data['y'].isin([1])]
-negative = data[data['y'].isin([0])]
+def demoSVM(data):
+    positive = data[data['y'].isin([1])]
+    negative = data[data['y'].isin([0])]
 
-svc = svm.LinearSVC(C=1, loss='hinge', max_iter=1000)            #liner
-svc
+    svc = svm.LinearSVC(C=1, loss='hinge', max_iter=1000)            #liner
+    svc
 
-svc.fit(data[['spectral_pow', 'mean']], data['y'])
-print(svc.score(data[['spectral_pow', 'mean']], data['y']))
-
-svc2 = svm.LinearSVC(C=100, loss='hinge', max_iter=100000)       #惩罚系数
-svc2.fit(data[['spectral_pow', 'mean']], data['y'])
-print(svc2.score(data[['spectral_pow', 'mean']], data['y']))
-
-svc3 = svm.SVC(C=3, kernel='rbf', gamma=5000, probability=True)  #GaussianKernel
-svc3
-
-svc3.fit(data[['spectral_pow', 'mean']], data['y'])
-print(svc3.score(data[['spectral_pow', 'mean']], data['y']))
-
-ypred = svc3.predict(data[['spectral_pow', 'mean']])
-print(classification_report(data['y'], ypred))
-
-candidate = [0.01, 0.03, 0.1, 0.3, 1, 3, 10, 30, 100, 1000, 5000]  #c gamma
-combination = [(C, gamma) for C in candidate for gamma in candidate]
-
-search = []
-for C, gamma in combination:
-    svc = svm.SVC(C=C, gamma=gamma)
     svc.fit(data[['spectral_pow', 'mean']], data['y'])
-    search.append(svc.score(data[['spectral_pow', 'mean']], data['y']))   #CV数据
+    print(svc.score(data[['spectral_pow', 'mean']], data['y']))
 
-best_score = search[np.argmax(search)]
-best_param = combination[np.argmax(search)]
+    svc2 = svm.LinearSVC(C=100, loss='hinge', max_iter=100000)       #惩罚系数
+    svc2.fit(data[['spectral_pow', 'mean']], data['y'])
+    print(svc2.score(data[['spectral_pow', 'mean']], data['y']))
 
-print(best_score, best_param)
+    svc3 = svm.SVC(C=3, kernel='rbf', gamma=5000, probability=True)  #GaussianKernel
+    svc3
+
+    svc3.fit(data[['spectral_pow', 'mean']], data['y'])
+    print(svc3.score(data[['spectral_pow', 'mean']], data['y']))
+
+    ypred = svc3.predict(data[['spectral_pow', 'mean']])
+    print(classification_report(data['y'], ypred))
+
+    candidate = [0.01, 0.03, 0.1, 0.3, 1, 3, 10, 30, 100, 1000, 5000]  #c gamma
+    combination = [(C, gamma) for C in candidate for gamma in candidate]
+
+    search = []
+    for C, gamma in combination:
+        svc = svm.SVC(C=C, gamma=gamma)
+        svc.fit(data[['spectral_pow', 'mean']], data['y'])
+        search.append(svc.score(data[['spectral_pow', 'mean']], data['y']))   #CV数据
+
+    best_score = search[np.argmax(search)]
+    best_param = combination[np.argmax(search)]
+
+    print(best_score, best_param)
 
 'RF'
 rf = RandomForestClassifier(

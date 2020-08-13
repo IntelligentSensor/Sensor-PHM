@@ -11,10 +11,11 @@ import scipy.ndimage
 from math import floor, log
 from sklearn import preprocessing
 
+from preprocess import preprocess
 from sklearn.feature_selection import SelectKBest
 from sklearn.feature_selection import chi2
 
-from preprocess import preprocess
+import _pickle as cPickle
 import matplotlib.pyplot as plt
 
 class featureEngineer(object):
@@ -76,10 +77,17 @@ class featureEngineer(object):
         return weights
 
     '样本分布'
-    def sampleDistribution(self, sample):     #非参数检验
+    def sampleDistribution(self, dataSet):     #非参数检验
+        '检查Nan 缺省值'
+        dataSet = pd.DataFrame(dataSet)
+        nan_rows = dataSet[dataSet.isnull().T.any().T]
+        print('dataSet缺失值数量为', len(nan_rows))
+
+        sample = dataSet.T[0]
         print('describe', sample.describe())  #基本统计
         df = pd.DataFrame(sample)             #离群点
         df.boxplot()
+        plt.title("样本箱形图")
         plt.show()
         print('正态显著性检验', sts.shapiro(sample))                   #Shapiro-Wilk
         print('logistic检验', sts.anderson(sample,dist="logistic"))  #Anderson-Darling
@@ -350,6 +358,7 @@ class featureEngineer(object):
         
         plt.figure(figsize=(16,5))              #离群点
         df.boxplot()
+        plt.title("特征箱形图")
         plt.show()
 
     '特征变换缩放'
@@ -380,6 +389,28 @@ class featureEngineer(object):
         'frechet_form3', 'frechet_form4', 'frechet_form5', 'frechet_form6', 'frechet_form7', 'frechet_form8' ])
         pvalues.index = ['p-value']
         pvalues.T.sort_values(by = 'p-value', ascending= True)
+
+    ##################取前两类数据集做共线性与IV检验############
+    def binaryData(self, feature, label):
+        
+        class_index = np.argwhere(label < 2)
+        head = class_index[0][0]
+        tail = class_index[-1][0]
+        
+        y_train_IV = label[head:tail].reshape(tail, 1)
+        x_train_IV = feature[head:tail]
+        x_train_IV = self.featureScaling(x_train_IV)   #独立归一化
+        
+        print('y_train_IV shape {}' .format(y_train_IV.shape))
+        print('x_train_IV shape {}' .format(x_train_IV.shape))
+        
+        '与标签合并'
+        data = np.hstack((x_train_IV, y_train_IV))
+        data = pd.DataFrame(data, columns = ['maximum', 'minimum', 'mean', 'var', 'std', 'absmean', 'rms', 'vi',
+                                             'skew', 'kurt', 'ptp', 'par', 'form', 'impulse', 'margin', 'spectral_kurt', 'spectral_skw',
+                                             'spectral_pow', 'wave_L2', 'frechet_form1', 'frechet_form2', 'frechet_form3', 'frechet_form4',
+                                             'frechet_form5', 'frechet_form6', 'frechet_form7', 'frechet_form8', 'y'])
+        return data
 
     #########################特征方差########################
     def var_filter(self, data, label, k=0):
@@ -480,9 +511,9 @@ class featureEngineer(object):
 if __name__ == "__main__":
 
     '导入数据'
-    path = '/Users/tung/Python/WorkProject/PHMresearch/WDCNN&LR_FaultDiagnosis/data/0HP'
+    path = '/Users/tung/Python/WorkProject/PHMresearch/WDCNN&LR_FaultDiagnosis/'
     preprocess = preprocess()
-    x_train, y_train, x_valid, y_valid, x_test, y_test = preprocess.prepro(d_path=path,
+    x_train, y_train, x_valid, y_valid, x_test, y_test = preprocess.prepro(d_path=path + 'data/0HP',
                                                                  length=2048,         #2048=5.68小时  周期T=400*10S=66.6min～1h
                                                                  number=200,          #每类样本的数量
                                                                  normal=True,         #是否标准化
@@ -496,32 +527,28 @@ if __name__ == "__main__":
     print(x_valid.shape[0], '验证样本个数')
     print('测试样本的维度', x_test.shape)
     print(x_test.shape[0], '测试样本个数')
-
-    '预处理'
-    '检查Nan 缺省值'
-    test = pd.DataFrame(x_train)
-    nan_rows = test[test.isnull().T.any().T]
-    print('样本缺失值数量为', len(nan_rows))
     
     FE = featureEngineer()
     'onehot解码'
     y_train_decode = FE.decode(y_train)
     y_valid_decode = FE.decode(y_valid)
     y_test_decode = FE.decode(y_test)
-
-    'compute class weight'
+    
+    '处理样本不均衡'
+    'classWeight'
     weights = FE.calssWeight(y_train_decode)
     print('class_weight', weights)
-    
-    '查看数据分布'
-    FE.sampleDistribution(test.T[0])
+    'overSampling'
+#    x_train, y_train = overSampling(x_train, y_train)
+
+    '查看样本分布'
+    FE.sampleDistribution(x_train)
 
     '生成特征'
     feature_train = np.hstack((FE.generateStats(x_train), FE.generateWave_L2(x_train), FE.generateFrechet(x_train)))
     feature_valid = np.hstack((FE.generateStats(x_valid), FE.generateWave_L2(x_valid), FE.generateFrechet(x_valid)))
     feature_test = np.hstack((FE.generateStats(x_test), FE.generateWave_L2(x_test), FE.generateFrechet(x_test)))
     print('feature shape', feature_train.shape)
-
     '查看特征分布'
     FE.featureDistribution(feature_train)
     
@@ -532,29 +559,22 @@ if __name__ == "__main__":
 
     'Feature Select选择'
     FE.featureSelect(feature_train_scaled, y_train)
-
-    '取前两类做共线性与IV检验数据集'
-    class_index = np.argwhere(y_train_decode < 2)
-    head = class_index[0][0]
-    tail = class_index[-1][0]
-
-    y_train_IV = y_train_decode[head:tail].reshape(tail, 1)
-    x_train_IV = feature_train[head:tail]
-    x_train_IV = FE.featureScaling(x_train_IV)   #独立归一化
-
-    print('y_train_IV shape {}' .format(y_train_IV.shape))
-    print('x_train_IV shape {}' .format(x_train_IV.shape))
-
-    '与标签合并'
-    data = np.hstack((x_train_IV, y_train_IV))
-    data = pd.DataFrame(data, columns = ['maximum', 'minimum', 'mean', 'var', 'std', 'absmean', 'rms', 'vi',
-                'skew', 'kurt', 'ptp', 'par', 'form', 'impulse', 'margin', 'spectral_kurt', 'spectral_skw',
-                'spectral_pow', 'wave_L2', 'frechet_form1', 'frechet_form2', 'frechet_form3', 'frechet_form4',
-                'frechet_form5', 'frechet_form6', 'frechet_form7', 'frechet_form8', 'y'])
-
-    FE.var_filter(data, 'y', k=0)   #特征方差
-    FE.vif_test(data, 'y', k=0.9)   #特征共线性检验
-
+    '取前两类数据集'
+    data = FE.binaryData(feature_train, y_train_decode)
+    '方差检验'
+    FE.var_filter(data, 'y', k=0)
+    '共线性检验'
+    FE.vif_test(data, 'y', k=0.9)
+    'IV检验'
     d4,iv,cut,woe = FE.bin_distince(data['frechet_form8'], data['y'], n =2)    #等距 IV
     d4,iv,cut,woe = FE.bin_frequency(data['frechet_form8'], data['y'], n =3)   #等频 IV
+
+    '保存特征'
+    cPickle.dump(feature_train_scaled, open(path+'feature_train_scaled.pkl', 'wb'))
+    cPickle.dump(feature_valid_scaled, open(path+'feature_valid_scaled.pkl', 'wb'))
+    cPickle.dump(feature_test_scaled, open(path+'feature_test_scaled.pkl', 'wb'))
+    
+    cPickle.dump(y_train_decode, open(path +'y_train_decode.pkl', 'wb'))
+    cPickle.dump(y_valid_decode, open(path +'y_valid_decode.pkl', 'wb'))
+    cPickle.dump(y_test_decode, open(path +'y_test_decode.pkl', 'wb'))
 
