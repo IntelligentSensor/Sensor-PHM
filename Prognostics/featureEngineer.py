@@ -390,21 +390,21 @@ class featureEngineer(object):
         :param k: 方差阈值
         :return:  按阈值返回dataframe
         """
-            features = data.drop([label], axis=1).columns
-            saved_features = []
-            for feature in features:
+        features = data.drop([label], axis=1).columns
+        saved_features = []
+        for feature in features:
             feature_var = np.array(data[feature]).var()
             print('输入特征{0}的方差为：{1}'.format(feature, feature_var))
 
-        #########################共线性检验########################
-        def vif_test(self, data, label, k=None):
+    #########################共线性检验########################
+    def vif_test(self, data, label, k=None):
         """
-            计算dataframe中输入特征之间的共线性系数
-            :param data: dataframe数据集，包括输入输出
-            :param label: 输出特征
-            :param k: 相关系数阈值
-            :return:  按阈值返回dataframe
-            """
+        计算dataframe中输入特征之间的共线性系数
+        :param data: dataframe数据集，包括输入输出
+        :param label: 输出特征
+        :param k: 相关系数阈值
+        :return:  按阈值返回dataframe
+        """
         features = data.drop([label], axis=1).columns
         feature_array = np.array(data[features])
         #     print(feature_array)
