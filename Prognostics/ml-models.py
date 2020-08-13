@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+import logging
 import numpy as np
 import pandas as pd
 import _pickle as cPickle
@@ -6,7 +7,6 @@ import scipy.optimize as opt
 from datetime import datetime
 from scipy.stats import uniform, randint
 from sklearn.preprocessing import OneHotEncoder
-
 
 from sklearn.model_selection import cross_val_score, GridSearchCV
 from sklearn.model_selection import KFold, RandomizedSearchCV, train_test_split
@@ -17,12 +17,11 @@ from sklearn.metrics import confusion_matrix, mean_squared_error, mean_absolute_
 from sklearn.metrics import roc_curve, confusion_matrix, classification_report
 from sklearn.metrics import precision_score, recall_score, f1_score
 
-import logging
 from sklearn import svm
 from sklearn.linear_model import LogisticRegression
 from sklearn.tree import DecisionTreeClassifier
-from sklearn.ensemble import RandomForestClassifier
 from sklearn.ensemble import AdaBoostClassifier
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.ensemble import GradientBoostingClassifier
 
 path = '/Users/tung/Python/WorkProject/PHMresearch/WDCNN&LR_FaultDiagnosis/'
@@ -46,8 +45,10 @@ def encode(data):
 
 y_test = encode(y_test_decode)
 
+
 def display_scores(scores):
     print("Scores: {0}\nMean: {1:.3f}\nStd: {2:.3f}".format(scores, np.mean(scores), np.std(scores)))
+
 
 'lasso lr'
 

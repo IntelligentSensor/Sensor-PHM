@@ -1,22 +1,19 @@
 #!/usr/bin/env python
-
+import math
+import pywt
 import numpy as np
 import pandas as pd
-import scipy.stats as sts
-from sklearn.utils import class_weight
-
-import pywt
-import math
 import scipy.ndimage
+import scipy.stats as sts
 from math import floor, log
 from sklearn import preprocessing
-
-from preprocess import preprocess
-from sklearn.feature_selection import SelectKBest
+from sklearn.utils import class_weight
 from sklearn.feature_selection import chi2
+from sklearn.feature_selection import SelectKBest
 
 import _pickle as cPickle
 import matplotlib.pyplot as plt
+from preprocess import preprocess
 
 class featureEngineer(object):
     def __init__(self):

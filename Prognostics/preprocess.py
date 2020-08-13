@@ -1,6 +1,7 @@
-from scipy.io import loadmat
-import numpy as np
+#!/usr/bin/env python
 import os
+import numpy as np
+from scipy.io import loadmat
 from sklearn import preprocessing  # 0-1编码
 from sklearn.model_selection import StratifiedShuffleSplit  # 随机划分，保证每一类比例相同
 

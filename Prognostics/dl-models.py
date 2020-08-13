@@ -1,15 +1,15 @@
 #!/usr/bin/env python
-
+import sys
 import random
 import numpy as np
 import seaborn as sns
+from datetime import datetime
 import matplotlib.pyplot as plt
 from preprocess import preprocess
 
-import sys
+
 import keras as K
 import tensorflow as tf
-from datetime import datetime
 from keras.regularizers import l2
 from keras.utils import plot_model
 from keras.models import Sequential
@@ -292,7 +292,7 @@ model.summary()
 
 #evaluation
 score = history.model.evaluate(x=x_test, y=y_test, verbose=0)
-print("测试集上的损失：", score[0])
+print("测试集上的损失：",score[0])
 print("测试集上的损失:",score[1])
 plot_model(model=model, to_file=path+'models/biLSTM.png', show_shapes=True)
 
