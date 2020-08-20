@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import logging
 import numpy as np
 import pandas as pd
@@ -54,7 +56,7 @@ def display_scores(scores):
 
 #parameters set
 lasso_model = LogisticRegression(C=0.7, penalty='l1', tol=1e-6, solver = 'liblinear',
-                                 class_weight = 'balanced',multi_class= 'ovr', max_iter=1000)   #不可导
+                                 class_weight = 'balanced',multi_class= 'ovr', max_iter=1000) #不可导
 
 print(lasso_model)
 
@@ -275,14 +277,14 @@ def demoSVM(data):
 rf = RandomForestClassifier(
                             n_estimators = 21,
                             max_depth=5,
-                            max_features='auto',                #构建决策树最优模型时考虑的最大特征数 n的平方根
-                            oob_score = True,                   #选用袋外样本，其误差是测试数据集误差的无偏估计
-                            min_samples_leaf = 1,               #叶子节点含有的最少样本,小于则剪枝
-                            min_samples_split= 2,              #叶子节点可分的最小样本数
+                            max_features='auto',             #构建决策树最优模型时考虑的最大特征数 n的平方根
+                            oob_score = True,                #选用袋外样本，其误差是测试数据集误差的无偏估计
+                            min_samples_leaf = 1,            #叶子节点含有的最少样本,小于则剪枝
+                            min_samples_split= 2,            #叶子节点可分的最小样本数
                             max_leaf_nodes = None,           #最大叶子节点数
                             min_impurity_decrease = 0.0,     #节点划分的最小不纯度
-                            criterion = 'gini',                        #表示节点的划分标准
-                            min_weight_fraction_leaf=0.0      #叶子节点最小的样本权重和,小于则剪枝,较多样本的缺失值或偏差很大时尝试
+                            criterion = 'gini',              #表示节点的划分标准
+                            min_weight_fraction_leaf=0.0     #叶子节点最小的样本权重和,小于则剪枝,较多样本的缺失值或偏差很大时尝试
                             )
 print(rf)
 
