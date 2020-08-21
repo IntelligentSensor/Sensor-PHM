@@ -3,17 +3,13 @@ Streaming Linear Regression Example.
 """
 from __future__ import print_function
 
-# $example on$
 import sys
-# $example off$
 
 from pyspark import SparkContext
 from pyspark.streaming import StreamingContext
-# $example on$
 from pyspark.mllib.linalg import Vectors
 from pyspark.mllib.regression import LabeledPoint
 from pyspark.mllib.regression import StreamingLinearRegressionWithSGD
-# $example off$
 
 if __name__ == "__main__":
     if len(sys.argv) != 3:
@@ -24,7 +20,6 @@ if __name__ == "__main__":
     sc = SparkContext(appName="PythonLogisticRegressionWithLBFGSExample")
     ssc = StreamingContext(sc, 1)
 
-    # $example on$
     def parse(lp):
         label = float(lp[lp.find('(') + 1: lp.find(',')])
         vec = Vectors.dense(lp[lp.find('[') + 1: lp.find(']')].split(','))

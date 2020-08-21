@@ -2,11 +2,9 @@ from __future__ import print_function
 
 from pyspark import SparkContext
 from pyspark.streaming import StreamingContext
-# $example on$
 from pyspark.mllib.linalg import Vectors
 from pyspark.mllib.regression import LabeledPoint
 from pyspark.mllib.clustering import StreamingKMeans
-# $example off$
 
 if __name__ == "__main__":
     sc = SparkContext(appName="StreamingKMeansExample")  # SparkContext
@@ -21,10 +19,10 @@ if __name__ == "__main__":
 
         return LabeledPoint(label, vec)
 
-    trainingData = sc.textFile("data/mllib/kmeans_data.txt")\
+    trainingData = sc.textFile("/Users/tung/Documents/spark-2.4.3/data/mllib/kmeans_data.txt")\
         .map(lambda line: Vectors.dense([float(x) for x in line.strip().split(' ')]))
 
-    testingData = sc.textFile("data/mllib/streaming_kmeans_data_test.txt").map(parse)
+    testingData = sc.textFile("/Users/tung/Documents/spark-2.4.3/data/mllib/streaming_kmeans_data_test.txt").map(parse)
 
     trainingQueue = [trainingData]
     testingQueue = [testingData]
@@ -44,6 +42,5 @@ if __name__ == "__main__":
 
     ssc.start()
     ssc.stop(stopSparkContext=True, stopGraceFully=True)
-    # $example off$
 
     print("Final centers: " + str(model.latestModel().centers))

@@ -1,12 +1,6 @@
-"""
-The K-means algorithm written from scratch against PySpark. In practice,
-one may prefer to use the KMeans algorithm in ML, as shown in
-examples/src/main/python/ml/kmeans_example.py.
-"""
 from __future__ import print_function
 
 import sys
-
 import numpy as np
 from pyspark.sql import SparkSession
 

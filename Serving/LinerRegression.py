@@ -23,7 +23,7 @@ if __name__ == "__main__":
         values = [float(x) for x in line.replace(',', ' ').split(' ')]
         return LabeledPoint(values[0], values[1:])
     
-    data = sc.textFile("data/mllib/ridge-data/lpsa.data")
+    data = sc.textFile("/Users/tung/Documents/spark-2.4.3/data/mllib/ridge-data/lpsa.data")
     parsedData = data.map(parsePoint)
     
     # Build the model
@@ -37,5 +37,5 @@ if __name__ == "__main__":
     print("Mean Squared Error = " + str(MSE))
 
 # Save and load model
-model.save(sc, "target/tmp/pythonLinearRegressionWithSGDModel")
-sameModel = LinearRegressionModel.load(sc, "target/tmp/pythonLinearRegressionWithSGDModel")
+#model.save(sc, "target/tmp/pythonLinearRegressionWithSGDModel")
+#sameModel = LinearRegressionModel.load(sc, "target/tmp/pythonLinearRegressionWithSGDModel")
