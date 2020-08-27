@@ -6,17 +6,17 @@
 
 ### 生命周期管理
 1. For python verify code see [python生命周期](https://github.com/intelligentph/PhRepository/tree/master/HealthManagement/pythonVerifyCode).
-which file is saved in the `reg.py` file.
+which file is saved in the `.py` file.
 2. For C Deployment code see [c生命周期](https://github.com/intelligentph/PhRepository/tree/master/HealthManagement/cDeploymentCode).
-which file is saved in the `BitmapDialog.cpp` file.
+which file is saved in the `.cpp` file.
 3. For html test report see [TestReport](https://github.com/intelligentph/PhRepository/tree/master/HealthManagement/TestReport).
 which file is saved in the `TestReport.html` file.
 
 ### 故障诊断
 1. For python verify code see [python故障](https://github.com/intelligentph/PhRepository/tree/master/Prognostic/pythonVerifyCode).
-which file is saved in the `reg.py` file.
+which file is saved in the `.py` file.
 2. For C Deployment code see [c故障](https://github.com/intelligentph/PhRepository/tree/master/Prognostic/cDeploymentCode).
-which file is saved in the `BitmapDialog.cpp` file.
+which file is saved in the `.cpp` file.
 3. For html test report see [TestReport](https://github.com/intelligentph/PhRepository/tree/master/Prognostic/TestReport).
 which file is saved in the `TestReport.html` file.
 
