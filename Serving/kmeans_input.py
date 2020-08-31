@@ -4,7 +4,6 @@ import sys
 import numpy as np
 from pyspark.sql import SparkSession
 
-
 def parseVector(line):
     return np.array([float(x) for x in line.split(' ')])
 
