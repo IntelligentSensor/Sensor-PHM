@@ -4,6 +4,6 @@ numpy==1.16.2
 scipy==1.2.1
 scikit-learn==0.22.1
 Keras==2.2.0
-tensorflow==1.15.4
+tensorflow==2.5.3
 flask==1.1.1
 flask-restful==0.3.8
